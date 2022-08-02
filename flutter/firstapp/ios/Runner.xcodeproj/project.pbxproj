@@ -42,6 +42,7 @@
 		7AFFD8EE1D35381100E5BB4D /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		887E2230282F73BE000223D0 /* MesiboPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MesiboPlugin.m; path = Classes/MesiboPlugin.m; sourceTree = SOURCE_ROOT; };
 		887E2231282F73BE000223D0 /* MesiboPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MesiboPlugin.h; path = Classes/MesiboPlugin.h; sourceTree = SOURCE_ROOT; };
+		8B9B4D58669831E7FC7F7DA6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Runner/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
 		97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -93,6 +94,7 @@
 				97C146EF1CF9000F007C117D /* Products */,
 				FD32189B692438D0A4DBAAEF /* Pods */,
 				55136C516E6CE78203F28804 /* Frameworks */,
+				8B9B4D58669831E7FC7F7DA6 /* GoogleService-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};

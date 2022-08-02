@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "330992934906",
+    "project_id": "mesibotest-7ca99",
+    "storage_bucket": "mesibotest-7ca99.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:330992934906:android:2977835e1e956368ee8e43",
+        "android_client_info": {
+          "package_name": "com.mesibo.firstapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "330992934906-crd3s11o7vj688bptqc2qc7pe24dpsk5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRyoAXDr1091pV9Nh7-9mf9EoVxP7CEcc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "330992934906-crd3s11o7vj688bptqc2qc7pe24dpsk5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

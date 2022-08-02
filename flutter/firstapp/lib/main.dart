@@ -1,19 +1,62 @@
+import 'dart:developer';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'MesiboPlugin.dart';
+import 'firebase_options.dart';
 
 class DemoUser {
   String token;
   String address;
 
   DemoUser(String t, String a) {
-    token =t;
+    token = t;
     address = a;
   }
 }
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    announcement: true,
+    badge: true,
+    carPlay: true,
+    criticalAlert: true,
+    provisional: true,
+    sound: true,
+  );
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    print('Got a message whilst in the foreground!');
+    print('Message data: ${message.data}');
+
+    if (message.notification != null) {
+      print('Message also contained a notification: ${message.notification}');
+    }
+  });
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  print('User granted permission: ${settings.authorizationStatus}');
+
   runApp(FirstMesiboApp());
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp();
+
+  print("Handling a background message: ${message.messageId}");
 }
 
 /// Home widget to display video chat option.
@@ -29,8 +72,7 @@ class FirstMesiboApp extends StatelessWidget {
         appBar: AppBar(
           title: Text("First Mesibo App"),
         ),
-        body:  HomeWidget(),
-
+        body: HomeWidget(),
       ),
       debugShowCheckedModeBanner: false,
     );
@@ -48,14 +90,14 @@ class _HomeWidgetState extends State<HomeWidget> {
   static const callbacks = const MethodChannel("mesibo.com/callbacks");
   String _mesiboStatus = 'Mesibo status: Not Connected.';
   Text mStatusText;
-        
+
   /* Refer to the tutorial to learn about users and token
    * https://mesibo.com/documentation/tutorials/get-started/
    * 
    * Create token for com.mesibo.firstapp using above tutorial and us here
    */
-  DemoUser user1 = DemoUser("token1", 'address1');
-  DemoUser user2 = DemoUser("token2", 'address2');
+  DemoUser user1 = DemoUser("77c9e95ff0056444de1fb0a995ba9dc24992193cb6a2f54eaa41d5eaya91feebe884", 'user1@example.com');
+  DemoUser user2 = DemoUser("8e67f96b9880df6d5a13b70de8167e059d73e759c82d5e9941d5e9ga5f81c70f76", 'user2@example.com');
 
   String remoteUser;
   bool mOnline = false, mLoginDone = false;
@@ -67,20 +109,19 @@ class _HomeWidgetState extends State<HomeWidget> {
     callbacks.setMethodCallHandler(callbackHandler);
   }
 
-
   void Mesibo_onConnectionStatus(int status) {
     print('Mesibo_onConnectionStatus: ' + status.toString());
     _mesiboStatus = 'Mesibo status: ' + status.toString();
-    setState((){});
+    setState(() {});
 
-    if(1 == status) mOnline = true;
+    if (1 == status) mOnline = true;
   }
 
   Future<dynamic> callbackHandler(MethodCall methodCall) async {
     print('Native call!');
     var args = methodCall.arguments;
     switch (methodCall.method) {
-      case "Mesibo_onConnectionStatus" :
+      case "Mesibo_onConnectionStatus":
         Mesibo_onConnectionStatus(args['status'] as int);
         return "";
         break;
@@ -89,7 +130,7 @@ class _HomeWidgetState extends State<HomeWidget> {
         break;
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -110,9 +151,7 @@ class _HomeWidgetState extends State<HomeWidget> {
             ),
           ],
         ),
-
         mStatusText = Text(_mesiboStatus),
-
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
@@ -134,13 +173,13 @@ class _HomeWidgetState extends State<HomeWidget> {
           child: Text("Video Call"),
           onPressed: _videoCall,
         ),
-
-
-
+        ElevatedButton(
+          child: Text("Set Push Token"),
+          onPressed: _getFrToken,
+        ),
       ],
     );
   }
-
 
   @override
   void dispose() {
@@ -161,13 +200,13 @@ class _HomeWidgetState extends State<HomeWidget> {
   }
 
   bool isOnline() {
-    if(mOnline) return true;
+    if (mOnline) return true;
     showAlert("Not Online", "First login with a valid token");
     return false;
   }
 
   void _loginUser1() {
-    if(mLoginDone) {
+    if (mLoginDone) {
       showAlert("Failed", "You have already initiated login. If the connection status is not 1, check the token and the package name/bundle ID");
       return;
     }
@@ -177,7 +216,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   }
 
   void _loginUser2() {
-    if(mLoginDone) {
+    if (mLoginDone) {
       showAlert("Failed", "You have already initiated login. If the connection status is not 1, check the token and the package name/bundle ID");
       return;
     }
@@ -187,23 +226,30 @@ class _HomeWidgetState extends State<HomeWidget> {
   }
 
   void _showMessages() {
-    if(!isOnline()) return;
+    if (!isOnline()) return;
     _mesibo.showMessages(remoteUser);
   }
 
   void _showUserList() {
-    if(!isOnline()) return;
+    if (!isOnline()) return;
     _mesibo.showUserList();
   }
 
   void _audioCall() {
-    if(!isOnline()) return;
+    if (!isOnline()) return;
     _mesibo.audioCall(remoteUser);
   }
 
   void _videoCall() {
-    if(!isOnline()) return;
+    if (!isOnline()) return;
     _mesibo.videoCall(remoteUser);
+  }
+
+  Future<void> _getFrToken() async {
+    // if (!isOnline()) return;
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    _mesibo.setPushToken(fcmToken, false);
+    log('TOKEN ==== $fcmToken');
   }
 }
 
